@@ -1,0 +1,35 @@
+import os
+import shutil
+
+def create_if_not_exist(folder):
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+
+def move_files(folder_name, files):
+    for file in files:
+        shutil.move(file, folder_name)
+
+if __name__ == "__main__":
+    current_dir = os.getcwd()
+    files = os.listdir(current_dir)
+
+    create_if_not_exist(os.path.join(current_dir, 'Images'))
+    create_if_not_exist(os.path.join(current_dir, 'Docs'))
+    create_if_not_exist(os.path.join(current_dir, 'Media'))
+    create_if_not_exist(os.path.join(current_dir, 'Others'))
+
+    img_exts = [".png", ".jpg", ".jpeg"]
+    images = [file for file in files if os.path.splitext(file)[1].lower() in img_exts]
+
+    docs_exts = [".pdf", ".txt", ".doc", ".docx"]
+    docs = [file for file in files if os.path.splitext(file)[1].lower() in docs_exts]
+
+    others = []
+    for file in files:
+        ext = os.path.splitext(file)[1].lower()
+        if (ext not in img_exts) and (ext not in docs_exts) and os.path.isfile(os.path.join(current_dir, file)):
+            others.append(file)
+
+    move_files(os.path.join(current_dir, "Images"), [os.path.join(current_dir, file) for file in images])
+    move_files(os.path.join(current_dir, "Docs"), [os.path.join(current_dir, file) for file in docs])
+    move_files(os.path.join(current_dir, "Others"), [os.path.join(current_dir, file) for file in others])
